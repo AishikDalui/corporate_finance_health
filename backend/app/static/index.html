@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apple Inc. — Executive AI Financial Health Analyst</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col">
+
+  <!-- Top Navigation Header -->
+  <header class="bg-[#0B192C] text-white border-b border-slate-800 sticky top-0 z-50 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
+          <i class="fa-brands fa-apple text-xl text-white"></i>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight">Apple Inc. Financial Health AI</h1>
+          <p class="text-xs text-slate-400">Enterprise Text-to-SQL Analytics & Executive Intelligence</p>
+        </div>
+      </div>
+      
+      <div class="flex items-center space-x-3">
+        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span>
+          MySQL 8.0 Live
+        </span>
+        <button onclick="clearChat()" class="text-xs px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
+          <i class="fa-solid fa-arrows-rotate mr-1"></i> New Session
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-1 flex flex-col gap-6">
+
+    <!-- Control Bar: Year Filter Buttons + KPI Snapshot -->
+    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/80">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <!-- Year Filters -->
+        <div>
+          <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <i class="fa-solid fa-calendar-days text-blue-600"></i> Fiscal Year Filter:
+          </div>
+          <div class="flex flex-wrap items-center gap-2" id="year-filter-buttons">
+            <button onclick="selectYear(null)" id="btn-all" class="year-btn px-4 py-1.5 rounded-xl text-xs font-semibold bg-blue-600 text-white shadow-sm transition">
+              All Years (Trend)
+            </button>
+            <button onclick="selectYear(2025)" id="btn-2025" class="year-btn px-4 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+              2025
+            </button>
+            <button onclick="selectYear(2024)" id="btn-2024" class="year-btn px-4 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+              2024
+            </button>
+            <button onclick="selectYear(2023)" id="btn-2023" class="year-btn px-4 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+              2023
+            </button>
+            <button onclick="selectYear(2022)" id="btn-2022" class="year-btn px-4 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+              2022
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Analytical Queries -->
+        <div>
+          <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+            <i class="fa-solid fa-bolt text-amber-500"></i> Management Quick Actions:
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="sendQuickPrompt('Show multi-stage profitability margins over time')" class="px-3 py-1.5 rounded-xl text-xs font-medium bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-100 transition">
+              📊 Margins
+            </button>
+            <button onclick="sendQuickPrompt('What is the cash conversion cycle (DSO, DIO, DPO)?')" class="px-3 py-1.5 rounded-xl text-xs font-medium bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-100 transition">
+              🔄 Cash Cycle (CCC)
+            </button>
+            <button onclick="sendQuickPrompt('What is Apple current ratio and working capital?')" class="px-3 py-1.5 rounded-xl text-xs font-medium bg-cyan-50 text-cyan-700 hover:bg-cyan-100 border border-cyan-100 transition">
+              💧 Liquidity
+            </button>
+            <button onclick="sendQuickPrompt('What is the liabilities-to-equity ratio and debt leverage?')" class="px-3 py-1.5 rounded-xl text-xs font-medium bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-100 transition">
+              ⚖️ Solvency
+            </button>
+            <button onclick="sendQuickPrompt('Compare operating cash flow with net income for earnings quality')" class="px-3 py-1.5 rounded-xl text-xs font-medium bg-purple-50 text-purple-700 hover:bg-purple-100 border border-purple-100 transition">
+              💎 Earnings Quality
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Realtime Executive KPI Metric Row -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mt-5 pt-4 border-t border-slate-100" id="kpi-ribbon">
+        <div class="bg-slate-50/70 p-3 rounded-xl border border-slate-100">
+          <div class="text-[11px] font-medium text-slate-400 uppercase">Topline Revenue</div>
+          <div class="text-base font-bold text-slate-900 mt-0.5" id="kpi-rev">$395.8B</div>
+          <div class="text-[10px] text-emerald-600 font-medium">+4.5% YoY</div>
+        </div>
+        <div class="bg-slate-50/70 p-3 rounded-xl border border-slate-100">
+          <div class="text-[11px] font-medium text-slate-400 uppercase">Gross Margin</div>
+          <div class="text-base font-bold text-blue-600 mt-0.5" id="kpi-gm">46.91%</div>
+          <div class="text-[10px] text-emerald-600 font-medium">+71 bps expansion</div>
+        </div>
+        <div class="bg-slate-50/70 p-3 rounded-xl border border-slate-100">
+          <div class="text-[11px] font-medium text-slate-400 uppercase">Operating Margin</div>
+          <div class="text-base font-bold text-indigo-600 mt-0.5" id="kpi-om">31.97%</div>
+          <div class="text-[10px] text-slate-500 font-medium">Industry Benchmark: 18%</div>
+        </div>
+        <div class="bg-slate-50/70 p-3 rounded-xl border border-slate-100">
+          <div class="text-[11px] font-medium text-slate-400 uppercase">Current Ratio</div>
+          <div class="text-base font-bold text-slate-900 mt-0.5" id="kpi-cr">0.87x</div>
+          <div class="text-[10px] text-blue-600 font-medium">Negative Working Capital</div>
+        </div>
+        <div class="bg-slate-50/70 p-3 rounded-xl border border-slate-100">
+          <div class="text-[11px] font-medium text-slate-400 uppercase">Operating Cash Flow</div>
+          <div class="text-base font-bold text-emerald-600 mt-0.5" id="kpi-ocf">$111.5B</div>
+          <div class="text-[10px] text-slate-500 font-medium">Strong Cash Engine</div>
+        </div>
+        <div class="bg-slate-50/70 p-3 rounded-xl border border-slate-100">
+          <div class="text-[11px] font-medium text-slate-400 uppercase">Cash Conversion</div>
+          <div class="text-base font-bold text-purple-600 mt-0.5" id="kpi-ccc">-62.4 Days</div>
+          <div class="text-[10px] text-emerald-600 font-medium">Supplier-Financed</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conversational Interaction Area -->
+    <div class="flex-1 bg-white rounded-2xl shadow-sm border border-slate-200/80 flex flex-col overflow-hidden min-h-[500px]">
+      
+      <!-- Chat Messages Container -->
+      <div id="chat-messages" class="flex-1 p-6 overflow-y-auto space-y-6 custom-scrollbar max-h-[600px]">
+        <!-- Welcome Message -->
+        <div class="flex items-start gap-4">
+          <div class="w-9 h-9 rounded-xl bg-[#0B192C] text-white flex items-center justify-center flex-shrink-0 shadow-sm">
+            <i class="fa-solid fa-robot text-sm"></i>
+          </div>
+          <div class="flex-1 space-y-3">
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 max-w-3xl">
+              <h3 class="font-semibold text-slate-900 text-sm mb-1">Welcome, Executive Management</h3>
+              <p class="text-slate-600 text-sm leading-relaxed">
+                I am your AI Corporate Financial Health Analyst for <strong>Apple Inc. (AAPL)</strong>. Ask any question in plain English, click a fiscal year button above (<strong>2025, 2024, 2023, 2022</strong>), or choose a quick action.
+              </p>
+              <div class="mt-3 flex flex-wrap gap-2 text-xs">
+                <span class="px-2.5 py-1 bg-white rounded-lg border border-slate-200 text-slate-600">💡 "What was Apple's gross margin trend?"</span>
+                <span class="px-2.5 py-1 bg-white rounded-lg border border-slate-200 text-slate-600">💡 "Show me the cash conversion cycle"</span>
+                <span class="px-2.5 py-1 bg-white rounded-lg border border-slate-200 text-slate-600">💡 "Compare operating cash flow with net income"</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Input Field -->
+      <div class="p-4 bg-slate-50/80 border-t border-slate-100">
+        <form id="chat-form" onsubmit="handleChatSubmit(event)" class="flex items-center gap-3 max-w-5xl mx-auto">
+          <div class="relative flex-1">
+            <input
+              type="text"
+              id="user-input"
+              placeholder="Ask a financial question (e.g. What was Apple's revenue and gross profit in 2024?)..."
+              class="w-full px-4 py-3 pr-10 text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 shadow-sm transition"
+            />
+            <span id="active-filter-badge" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-semibold bg-blue-100 text-blue-700 px-2 py-0.5 rounded-md">
+              FY2025
+            </span>
+          </div>
+          <button
+            type="submit"
+            id="send-btn"
+            class="px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium text-sm flex items-center gap-2 shadow-sm shadow-blue-500/20 transition disabled:opacity-50"
+          >
+            <span>Ask AI</span>
+            <i class="fa-solid fa-paper-plane text-xs"></i>
+          </button>
+        </form>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    let activeYear = null;
+    let chartInstances = {};
+
+    function selectYear(year) {
+      activeYear = year;
+      document.querySelectorAll('.year-btn').forEach(btn => {
+        btn.classList.remove('bg-blue-600', 'text-white');
+        btn.classList.add('bg-slate-100', 'text-slate-700');
+      });
+
+      const activeBtnId = year ? `btn-${year}` : 'btn-all';
+      const activeBtn = document.getElementById(activeBtnId);
+      if (activeBtn) {
+        activeBtn.classList.remove('bg-slate-100', 'text-slate-700');
+        activeBtn.classList.add('bg-blue-600', 'text-white');
+      }
+
+      const badge = document.getElementById('active-filter-badge');
+      if (year) {
+        badge.textContent = `FY${year}`;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+
+      // Fetch updated KPI ribbon
+      fetchKPI(year);
+
+      // Trigger automatic summary query
+      const prompt = year ? `Give me a full financial health executive summary for fiscal year ${year}` : `Show multi-stage profitability margins over time`;
+      sendPrompt(prompt);
+    }
+
+    async function fetchKPI(year) {
+      try {
+        const url = year ? `/api/v1/data/kpi-summary?year=${year}` : `/api/v1/data/kpi-summary`;
+        const res = await fetch(url);
+        if (res.ok) {
+          const kpi = await res.json();
+          document.getElementById('kpi-rev').textContent = `$${kpi.revenue_billion.toFixed(1)}B`;
+          document.getElementById('kpi-gm').textContent = `${kpi.gross_margin_pct.toFixed(2)}%`;
+          document.getElementById('kpi-om').textContent = `${kpi.operating_margin_pct.toFixed(2)}%`;
+          document.getElementById('kpi-cr').textContent = `${kpi.current_ratio.toFixed(2)}x`;
+          if (kpi.operating_cash_flow_billion) {
+            document.getElementById('kpi-ocf').textContent = `$${kpi.operating_cash_flow_billion.toFixed(1)}B`;
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching KPI", err);
+      }
+    }
+
+    function sendQuickPrompt(prompt) {
+      document.getElementById('user-input').value = prompt;
+      sendPrompt(prompt);
+    }
+
+    function handleChatSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('user-input');
+      const val = input.value.trim();
+      if (!val) return;
+      input.value = '';
+      sendPrompt(val);
+    }
+
+    function clearChat() {
+      const container = document.getElementById('chat-messages');
+      container.innerHTML = `
+        <div class="flex items-start gap-4">
+          <div class="w-9 h-9 rounded-xl bg-[#0B192C] text-white flex items-center justify-center flex-shrink-0 shadow-sm">
+            <i class="fa-solid fa-robot text-sm"></i>
+          </div>
+          <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 max-w-3xl">
+            <h3 class="font-semibold text-slate-900 text-sm mb-1">New Session Started</h3>
+            <p class="text-slate-600 text-sm">Ask your next financial question.</p>
+          </div>
+        </div>
+      `;
+    }
+
+    async function sendPrompt(promptText) {
+      const container = document.getElementById('chat-messages');
+
+      // Append User message
+      const userMsgHtml = `
+        <div class="flex items-start justify-end gap-3">
+          <div class="bg-blue-600 text-white rounded-2xl rounded-tr-none px-4 py-3 max-w-2xl text-sm shadow-sm">
+            ${promptText}
+            ${activeYear ? `<span class="ml-2 text-[10px] bg-blue-700 px-2 py-0.5 rounded font-mono">FY${activeYear}</span>` : ''}
+          </div>
+          <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center flex-shrink-0 text-xs font-bold">
+            YOU
+          </div>
+        </div>
+      `;
+      container.insertAdjacentHTML('beforeend', userMsgHtml);
+
+      // Append Loading indicator
+      const loadId = 'load-' + Date.now();
+      const loadingHtml = `
+        <div id="${loadId}" class="flex items-start gap-4">
+          <div class="w-9 h-9 rounded-xl bg-[#0B192C] text-white flex items-center justify-center flex-shrink-0">
+            <i class="fa-solid fa-robot text-sm"></i>
+          </div>
+          <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 text-xs text-slate-500 flex items-center gap-2">
+            <i class="fa-solid fa-circle-notch fa-spin text-blue-600"></i> Converting text to SQL & analyzing database...
+          </div>
+        </div>
+      `;
+      container.insertAdjacentHTML('beforeend', loadingHtml);
+      container.scrollTop = container.scrollHeight;
+
+      try {
+        const res = await fetch('/api/v1/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: promptText,
+            year_filter: activeYear,
+            chart_preference: 'auto',
+            session_id: 'management-session'
+          })
+        });
+
+        document.getElementById(loadId)?.remove();
+
+        if (!res.ok) throw new Error('API error');
+        const data = await res.json();
+        renderAIResponse(data);
+      } catch (err) {
+        document.getElementById(loadId)?.remove();
+        container.insertAdjacentHTML('beforeend', `
+          <div class="flex items-start gap-4 text-rose-600 text-xs bg-rose-50 p-4 rounded-xl border border-rose-100">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            Error generating answer. Please try again.
+          </div>
+        `);
+      }
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function renderAIResponse(data) {
+      const container = document.getElementById('chat-messages');
+      const chartId = 'chart-' + Math.random().toString(36).substring(2, 9);
+      const sqlId = 'sql-' + Math.random().toString(36).substring(2, 9);
+
+      // Clean narrative
+      const formattedAnswer = data.answer.replace(/### (.*?)\n/g, '<h4 class="font-bold text-slate-900 mt-2 mb-1">$1</h4>')
+                                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                                        .replace(/\n\n/g, '<br><br>')
+                                        .replace(/• /g, '• ');
+
+      let chartBlock = '';
+      if (data.chart && data.data && data.data.length > 0) {
+        chartBlock = `
+          <div class="mt-4 p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-bold text-slate-800">${data.chart.title}</span>
+              <span class="text-[10px] px-2 py-0.5 bg-slate-100 rounded text-slate-500 font-mono uppercase">${data.chart.chart_type}</span>
+            </div>
+            <div class="h-64 relative">
+              <canvas id="${chartId}"></canvas>
+            </div>
+          </div>
+        `;
+      }
+
+      // Follow-up suggestions
+      let followupsBlock = '';
+      if (data.suggested_followups && data.suggested_followups.length > 0) {
+        followupsBlock = `
+          <div class="mt-3 flex flex-wrap items-center gap-1.5 pt-3 border-t border-slate-100">
+            <span class="text-[11px] text-slate-400 mr-1"><i class="fa-solid fa-lightbulb text-amber-500"></i> Next:</span>
+            ${data.suggested_followups.map(f => `
+              <button onclick="sendQuickPrompt('${f.replace(/'/g, "\\'")}')" class="text-[11px] px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition">
+                ${f}
+              </button>
+            `).join('')}
+          </div>
+        `;
+      }
+
+      const responseHtml = `
+        <div class="flex items-start gap-4">
+          <div class="w-9 h-9 rounded-xl bg-[#0B192C] text-white flex items-center justify-center flex-shrink-0 shadow-sm">
+            <i class="fa-solid fa-robot text-sm"></i>
+          </div>
+          <div class="flex-1 max-w-3xl space-y-3">
+            <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200/80 shadow-sm text-sm text-slate-800 leading-relaxed">
+              <div class="prose prose-sm max-w-none">
+                ${formattedAnswer}
+              </div>
+              
+              ${chartBlock}
+
+              <!-- Collapsible Generated SQL -->
+              <div class="mt-3 pt-3 border-t border-slate-200/60">
+                <button onclick="document.getElementById('${sqlId}').classList.toggle('hidden')" class="text-xs font-medium text-slate-500 hover:text-blue-600 flex items-center gap-1.5 transition">
+                  <i class="fa-solid fa-code text-[10px]"></i> View Generated MySQL Query (${data.execution_time_ms}ms)
+                </button>
+                <div id="${sqlId}" class="hidden mt-2 p-3 bg-slate-900 rounded-xl font-mono text-[11px] text-slate-200 overflow-x-auto leading-normal">
+                  <span class="text-slate-400">-- Executed via ${data.source}</span><br>
+                  ${data.sql_query}
+                </div>
+              </div>
+
+              ${followupsBlock}
+            </div>
+          </div>
+        </div>
+      `;
+
+      container.insertAdjacentHTML('beforeend', responseHtml);
+      container.scrollTop = container.scrollHeight;
+
+      // Render Chart if element exists
+      if (data.chart && data.data && data.data.length > 0) {
+        initChart(chartId, data.chart, data.data);
+      }
+    }
+
+    function initChart(canvasId, chartConfig, tableData) {
+      const ctx = document.getElementById(canvasId)?.getContext('2d');
+      if (!ctx) return;
+
+      const labels = tableData.map(row => String(row[chartConfig.x_axis] || '').substring(0, 10));
+
+      const datasets = chartConfig.series.map(s => ({
+        label: s.label,
+        data: tableData.map(row => row[s.dataKey]),
+        borderColor: s.color || '#0071E3',
+        backgroundColor: chartConfig.chart_type === 'bar' ? (s.color || '#0071E3') + '99' : (s.color || '#0071E3') + '15',
+        borderWidth: 2,
+        tension: 0.3,
+        fill: chartConfig.chart_type === 'line',
+      }));
+
+      new Chart(ctx, {
+        type: chartConfig.chart_type === 'kpi_card' ? 'bar' : chartConfig.chart_type,
+        data: { labels, datasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  let val = context.parsed.y;
+                  if (chartConfig.format_type === 'percentage') return `${context.dataset.label}: ${val.toFixed(2)}%`;
+                  if (chartConfig.format_type === 'currency') return `${context.dataset.label}: $${val.toFixed(2)}B`;
+                  return `${context.dataset.label}: ${val}`;
+                }
+              }
+            }
+          },
+          scales: {
+            y: { grid: { color: '#f1f5f9' }, ticks: { font: { size: 10 } } },
+            x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+          }
+        }
+      });
+    }
+
+    // Initialize with 2025 KPI ribbon
+    fetchKPI(2025);
+  </script>
+</body>
+</html>
